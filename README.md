@@ -1,8 +1,11 @@
 # SupeRR Selector — High-Pressure T20 Player Reliability Analytics (IPL 2027)
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Methodology: Empirical Bayes & Cluster Bootstrap](https://img.shields.io/badge/Methodology-Empirical%20Bayes%20%26%20Cluster%20Bootstrap-101827.svg)](docs/pressure_model.md)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![Pandas & NumPy](https://img.shields.io/badge/Data-Pandas%20%7C%20NumPy%20%7C%20SciPy-150458.svg?style=flat-square)](requirements.txt)
+[![Matplotlib](https://img.shields.io/badge/Charts-Matplotlib-11557C.svg?style=flat-square)](src/generate_charts.py)
+[![Pytest](https://img.shields.io/badge/Verified-Pytest-0A9EDC.svg?style=flat-square)](requirements.txt)
+[![Methodology](https://img.shields.io/badge/Methodology-Empirical%20Bayes%20%26%20Cluster%20Bootstrap-101827.svg?style=flat-square)](docs/pressure_model.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-D5B36A.svg?style=flat-square)](LICENSE)
 
 > **Sanitized Public Methodology Release:** This public repository contains the core quantitative Python modeling modules, delivery-level pressure specification, and validation framework developed for the **SupeRR Selector Season 2** high-pressure T20 scouting problem. Per proprietary competition data restrictions, original ball-by-ball CSVs, player-level statistics, derived rankings, eligibility audits, and full scouting reports are **withheld locally** and excluded from version control.
 
@@ -11,7 +14,7 @@
 ## Confidentiality & Scope Notice
 
 Because this repository is public and the competition dataset is proprietary:
-- **Included in Public GitHub:** Generalized delivery-level pressure equations ([`docs/pressure_model.md`](docs/pressure_model.md)), quantitative modeling modules (`src/`), schema documentation ([`data/README.md`](data/README.md)), project configuration (`requirements.txt`), and MIT license (`LICENSE`).
+- **Included in Public GitHub:** Generalized delivery-level pressure equations ([`docs/pressure_model.md`](docs/pressure_model.md)), quantitative modeling modules ([`src/`](src/)), schema documentation ([`data/README.md`](data/README.md)), project configuration ([`requirements.txt`](requirements.txt)), author profile asset ([`assets/gandhi-kalasi.jpg`](assets/gandhi-kalasi.jpg)), and MIT license ([`LICENSE`](LICENSE)).
 - **Withheld Locally (`.gitignore`d):** Raw competition CSV files (`data/*.csv`), derived player metrics and rankings (`outputs/`), identity/exclusion scripts holding competition player IDs, full analytical reports (`reports/`), and official submission packages (`submission/`).
 - **Zero Synthetic Placeholders:** No fabricated or synthetic player datasets are included in place of private competition records.
 - **Methodology Scope:** All statistical modeling evaluates historical on-field high-pressure execution only; player auction availability, franchise retention lists, salary caps, and medical/fitness status lie outside the analytical scope.
@@ -25,8 +28,8 @@ The analytics pipeline separates repeatable high-pressure execution from small-s
 1. **Delivery-Level Pre-Ball Pressure Index ($P \in [0, 100]$)** — Implemented in [`src/pressure_model.py`](src/pressure_model.py) and specified in [`docs/pressure_model.md`](docs/pressure_model.md). Computes match jeopardy strictly **prior to each delivery** using inning phase, balls remaining, wickets in hand, required run rate vs. par scoring expectation (2nd innings), expected target pressure (1st innings), and knockout/super-over leverage without lookahead leakage.
 2. **Baseline vs. High-Pressure Role Metrics** — Implemented in [`src/batting_metrics.py`](src/batting_metrics.py) and [`src/bowling_metrics.py`](src/bowling_metrics.py). Separates high-pressure deliveries ($P_{\text{bat}} \ge 50.0$ for batters; $P_{\text{bowl}} \ge 55.0$ for bowlers) from each player's personal normal baseline while enforcing legal-delivery vs. wide/no-ball cricket accounting (`ball_total_runs` vs. `bowler_runs_conceded` excluding byes/leg-byes).
 3. **Two-Tier Empirical Bayes Shrinkage & 5-Pillar Scoring (BRS / PRS)** — Implemented in [`src/reliability_model.py`](src/reliability_model.py). Applies conjugate Bayesian shrinkage ($k_{\text{bat}} = 60$, $k_{\text{bowl}} = 80$, death overs $k_{\text{death}} = 40$) to stabilize strike rate, boundary rate, dot-ball percentage, economy, and wicket-taking under pressure, combining shrunk execution, pressure-vs-normal retention ($\Delta$), match-level consistency, continuous pressure-weighted leverage, and sample confidence into composite Batting Reliability Score (**BRS**) and Bowling Reliability Score (**PRS**).
-4. **Cross-Role Precision Weighting & Bootstrap Uncertainty** — Implemented in [`src/reliability_model.py`](src/reliability_model.py) and [`src/validation.py`](src/validation.py). Quantifies uncertainty with two-stage **match-cluster bootstrap** resampling ($B = 300$) to preserve within-match delivery dependence, and synthesizes batters and bowlers on a shared $z$-score scale penalized by bootstrap standard error ($\text{Overall}_i = 50 + 10 \cdot z_i \cdot \sqrt{n_{\text{eff}} / (n_{\text{eff}} + \tau)}$).
-5. **Robustness, Sensitivity & Chart Generation** — Implemented in [`src/validation.py`](src/validation.py) and [`src/generate_charts.py`](src/generate_charts.py). Evaluates out-of-sample temporal correlation, Spearman rank stability ($\rho$) across alternative pressure thresholds ($P \ge 55, 65$) and shrinkage priors ($k \pm 20$), and generates publication-grade diagnostic charts.
+4. **Cross-Role Precision Weighting & Bootstrap Uncertainty** — Implemented in [`src/reliability_model.py`](src/reliability_model.py) and [`src/validation.py`](src/validation.py). Quantifies uncertainty with two-stage **match-cluster bootstrap** resampling ($B = 300$) to preserve within-match delivery dependence, adjusts standardized cohort scores by empirical sample precision $Z_{\text{adj}} = Z_{\text{role}} \cdot \frac{n_{\text{pres}}}{n_{\text{pres}} + \tau_{\text{role}}}$ ($\tau_{\text{role}} = 0.5 \times \text{median}(n_{\text{pres}})$), combines dual-skill value via $Z_{\text{cross}} = Z_{\text{primary}} + 0.35 \cdot \max(0, Z_{\text{secondary}})$, and maps onto $\text{Overall}_i = \text{clip}(50 + 18 \cdot Z_{\text{cross}}, 0, 100)$.
+5. **Robustness, Sensitivity & Chart Generation** — Implemented in [`src/validation.py`](src/validation.py) and [`src/generate_charts.py`](src/generate_charts.py). Evaluates out-of-sample temporal correlation, Spearman rank stability ($\rho$) across alternative pressure thresholds ($P \ge 55, 65$) and shrinkage priors ($k \pm 20$), and generates high-DPI analytical charts.
 
 ---
 
@@ -34,7 +37,7 @@ The analytics pipeline separates repeatable high-pressure execution from small-s
 
 ```text
 superr-selector-ipl-2027-analytics/
-├── assets/                     # Project crest, logo, and author avatar
+├── assets/                     # Project crest, logo, and developer portrait
 ├── data/
 │   └── README.md               # Expected schema for local competition CSV files
 ├── docs/
@@ -84,9 +87,29 @@ pytest -rs -v
 
 ---
 
-## Author
+## Developer Profile
 
-**Gandhi Kalasi**  
-Quantitative Cricket Analytics & Sports Data Engineering  
-Repository: `GANDHIKALASI/superr-selector-ipl-2027-analytics`  
-License: [MIT](LICENSE)
+<table>
+  <tr>
+    <td width="150" valign="top" align="center">
+      <img src="assets/gandhi-kalasi.jpg" width="132" alt="Gandhi Kalasi" />
+    </td>
+    <td valign="top">
+      <h3 style="margin-top: 0;">Gandhi Kalasi</h3>
+      <p><strong>AI Product Builder | Full-Stack Developer | AI Agents, SLMs &amp; LLM Engineering</strong><br />
+      <em>Bhubaneswar, Odisha, India</em></p>
+      <p>I build practical software products and AI-powered systems, focusing on AI agents, compact language models, voice AI, RAG applications and full-stack product engineering. I enjoy turning real-world problems into useful, scalable products.</p>
+      <p>
+        <a href="https://github.com/GANDHIKALASI"><img src="https://img.shields.io/badge/GitHub-GANDHIKALASI-181717?style=flat-square&logo=github" alt="GitHub" /></a>
+        <a href="https://www.linkedin.com/in/gandhi-kalasi/"><img src="https://img.shields.io/badge/LinkedIn-gandhi--kalasi-0A66C2?style=flat-square&logo=linkedin" alt="LinkedIn" /></a>
+        <a href="https://www.instagram.com/bug_gandhi/"><img src="https://img.shields.io/badge/Instagram-@bug__gandhi-E4405F?style=flat-square&logo=instagram&logoColor=white" alt="Instagram" /></a>
+        <a href="https://portfolio-one-dun-f2390maeuj.vercel.app/"><img src="https://img.shields.io/badge/Portfolio-Visit%20Site-101827?style=flat-square" alt="Portfolio" /></a>
+        <a href="mailto:ffgandhi09@gmail.com"><img src="https://img.shields.io/badge/Email-ffgandhi09%40gmail.com-EA4335?style=flat-square&logo=gmail&logoColor=white" alt="Email" /></a>
+      </p>
+    </td>
+  </tr>
+</table>
+
+---
+
+Built by Gandhi Kalasi. · Licensed under [MIT](LICENSE).
