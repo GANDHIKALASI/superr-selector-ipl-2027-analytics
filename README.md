@@ -1,4 +1,13 @@
-# SupeRR Selector — High-Pressure T20 Player Reliability Analytics (IPL 2027)
+<table>
+  <tr>
+    <td width="92" valign="middle" align="center">
+      <img src="assets/rr_logo.png" width="76" alt="Rajasthan Royals Logo" />
+    </td>
+    <td valign="middle">
+      <h1 style="margin: 0; border-bottom: none;">SupeRR Selector — High-Pressure T20 Player Reliability Analytics (IPL 2027)</h1>
+    </td>
+  </tr>
+</table>
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![Pandas & NumPy](https://img.shields.io/badge/Data-Pandas%20%7C%20NumPy%20%7C%20SciPy-150458.svg?style=flat-square)](requirements.txt)
