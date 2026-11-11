@@ -1,149 +1,92 @@
-<div align="center">
-  <img src="assets/superr_logo.png" alt="SupeRR Selector — IPL 2027 Analytics Logo" width="380" />
+# SupeRR Selector — High-Pressure T20 Player Reliability Analytics (IPL 2027)
 
-  <h1>SupeRR Selector — IPL 2027 Analytics</h1>
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Methodology: Empirical Bayes & Cluster Bootstrap](https://img.shields.io/badge/Methodology-Empirical%20Bayes%20%26%20Cluster%20Bootstrap-101827.svg)](docs/pressure_model.md)
 
-  <p>
-    <strong>Auditable T20 Pressure Reliability Analytics Engine &amp; Interactive War Room Dashboard built for Rajasthan Royals' SupeRR Selector Season 2.</strong>
-  </p>
-
-  <p>
-    <img src="https://img.shields.io/badge/Competition-SupeRR%20Selector%20Season%202-E84D87?style=flat-square" alt="SupeRR Selector Season 2" />
-    <img src="https://img.shields.io/badge/Python-3.12%20%7C%20SciPy%20%7C%20Pandas-141B38?style=flat-square" alt="Python Analytics Pipeline" />
-    <img src="https://img.shields.io/badge/Node.js-22.x%20Zero--Dependency-D6B46A?style=flat-square" alt="Node.js 22.x Server" />
-    <img src="https://img.shields.io/badge/Dashboard-Derived%20Player%20Rankings-24C58A?style=flat-square" alt="Derived Player Rankings Dashboard" />
-    <img src="https://img.shields.io/badge/License-MIT-64748B?style=flat-square" alt="MIT License" />
-  </p>
-</div>
+> **Sanitized Public Methodology Release:** This public repository contains the core quantitative Python modeling modules, delivery-level pressure specification, and validation framework developed for the **SupeRR Selector Season 2** high-pressure T20 scouting problem. Per proprietary competition data restrictions, original ball-by-ball CSVs, player-level statistics, derived rankings, eligibility audits, and full scouting reports are **withheld locally** and excluded from version control.
 
 ---
 
-## Project Purpose & Competition Context
+## Confidentiality & Scope Notice
 
-Built for **Rajasthan Royals' SupeRR Selector Season 2**, this project addresses the Round 1 analytical challenge:
-
-> **"Identify the Most Reliable Players Under Pressure."**
-
-Rather than relying on aggregate career averages, the system evaluates delivery-level T20 match context across domestic and international fixtures to measure how batters, bowlers, and dual-skill all-rounders execute when scoreboard urgency and match leverage peak—supporting data-driven player shortlisting for IPL 2027 auction planning.
-
----
-
-## Key Capabilities & Analytical Methodology
-
-### 1. Continuous Context-Aware Pressure Model (`src/pressure_model.py`)
-Every delivery is scored pre-ball on a continuous $P \in [0, 100]$ scale derived from cumulative runs, balls remaining, wickets in hand, required run rate (second innings), phase rebuilding/death acceleration (first innings), and match closeness $C_{\text{match}} = 4 P_{\text{win}}(1 - P_{\text{win}})$.
-
-### 2. Five-Pillar Reliability Indices (`src/batting_metrics.py`, `src/bowling_metrics.py`)
-Constructs separate **Batting Reliability Score (BRS)** and **Bowling Reliability Score (PRS)** on a `0–100` cohort percentile scale using **Empirical Bayes shrinkage**:
-- **Pressure Execution:** Shrunk pressure strike rate or pressure economy combined with boundary, dot-ball, and wicket efficiency.
-- **Pressure Resilience ($\Delta$ Metrics):** Differential performance under pressure relative to each player's own normal-overs baseline, preventing inflated small-sample spikes.
-- **Consistency, Leverage & Sample Confidence:** Match-level repeatability and effective pressure volume weighting.
-
-### 3. Precision-Weighted Cross-Role Standardization & Honest Uncertainty (`src/reliability_model.py`)
-Unifies specialist batters, specialist bowlers, and dual-skill all-rounders using precision-weighted cross-role $z$-scores ($Z_{\text{adj}}$) with role priors $\tau_{\text{role}} = 0.5 \cdot \text{median}(n_{\text{pres, role}})$ and **300-iteration two-stage match-cluster bootstrap 95% confidence intervals** to preserve intra-match correlation structure.
-
-### 4. Out-of-Sample & Sensitivity Validation (`src/validation.py`)
-Validates model behavior across chronological temporal splits, format comparisons (Spearman $\rho$ and Kendall $\tau$), alternative weight perturbations, and minimum sample threshold sensitivity checks.
-
-### 5. Interactive Players Dashboard (`server.js`, `public/`)
-Zero-dependency Node.js & Vercel web dashboard featuring sortable Top-10 Batters, Top-10 Bowlers, Final Top-10 Overall, Dual All-Rounders, Screened Candidate Pool search, interactive Chart.js visuals, player inspection dossiers, KaTeX equations, and Data Quality validation cards.
+Because this repository is public and the competition dataset is proprietary:
+- **Included in Public GitHub:** Generalized delivery-level pressure equations ([`docs/pressure_model.md`](docs/pressure_model.md)), quantitative modeling modules (`src/`), schema documentation ([`data/README.md`](data/README.md)), project configuration (`requirements.txt`), and MIT license (`LICENSE`).
+- **Withheld Locally (`.gitignore`d):** Raw competition CSV files (`data/*.csv`), derived player metrics and rankings (`outputs/`), identity/exclusion scripts holding competition player IDs, full analytical reports (`reports/`), and official submission packages (`submission/`).
+- **Zero Synthetic Placeholders:** No fabricated or synthetic player datasets are included in place of private competition records.
+- **Methodology Scope:** All statistical modeling evaluates historical on-field high-pressure execution only; player auction availability, franchise retention lists, salary caps, and medical/fitness status lie outside the analytical scope.
 
 ---
 
-## Technical Architecture & Technology Stack
+## Quantitative Architecture
 
-| Layer | Technologies | Purpose |
-| :--- | :--- | :--- |
-| **Statistical Pipeline** | Python, Pandas, NumPy, SciPy | Delivery pressure scoring, Empirical Bayes shrinkage, cluster bootstrap CIs, cross-role standardization |
-| **Visualization & UI** | Chart.js, KaTeX, Matplotlib | Interactive sortable leaderboards, pressure charts, mathematical notation |
-| **Web & API Runtime** | Node.js `22.x` (`http`, `fs`, `path`), [`server.js`](server.js) | Serves interactive derived player dashboard locally & on Vercel with `HTTP 403` isolation on raw CSVs and private reports |
-| **Cloud Deployment** | Vercel Serverless Functions ([`api/index.js`](api/index.js), [`vercel.json`](vercel.json)) | Live web hosting of derived leaderboards with raw data & confidential reports excluded |
-| **Verification** | Pytest, Node `assert` ([`tests/test_public_privacy.js`](tests/test_public_privacy.js)) | Privacy-boundary verification & missing-file fail-closed checks |
+The analytics pipeline separates repeatable high-pressure execution from small-sample noise across five modular stages:
+
+1. **Delivery-Level Pre-Ball Pressure Index ($P \in [0, 100]$)** — Implemented in [`src/pressure_model.py`](src/pressure_model.py) and specified in [`docs/pressure_model.md`](docs/pressure_model.md). Computes match jeopardy strictly **prior to each delivery** using inning phase, balls remaining, wickets in hand, required run rate vs. par scoring expectation (2nd innings), expected target pressure (1st innings), and knockout/super-over leverage without lookahead leakage.
+2. **Baseline vs. High-Pressure Role Metrics** — Implemented in [`src/batting_metrics.py`](src/batting_metrics.py) and [`src/bowling_metrics.py`](src/bowling_metrics.py). Separates high-pressure deliveries ($P_{\text{bat}} \ge 50.0$ for batters; $P_{\text{bowl}} \ge 55.0$ for bowlers) from each player's personal normal baseline while enforcing legal-delivery vs. wide/no-ball cricket accounting (`ball_total_runs` vs. `bowler_runs_conceded` excluding byes/leg-byes).
+3. **Two-Tier Empirical Bayes Shrinkage & 5-Pillar Scoring (BRS / PRS)** — Implemented in [`src/reliability_model.py`](src/reliability_model.py). Applies conjugate Bayesian shrinkage ($k_{\text{bat}} = 60$, $k_{\text{bowl}} = 80$, death overs $k_{\text{death}} = 40$) to stabilize strike rate, boundary rate, dot-ball percentage, economy, and wicket-taking under pressure, combining shrunk execution, pressure-vs-normal retention ($\Delta$), match-level consistency, continuous pressure-weighted leverage, and sample confidence into composite Batting Reliability Score (**BRS**) and Bowling Reliability Score (**PRS**).
+4. **Cross-Role Precision Weighting & Bootstrap Uncertainty** — Implemented in [`src/reliability_model.py`](src/reliability_model.py) and [`src/validation.py`](src/validation.py). Quantifies uncertainty with two-stage **match-cluster bootstrap** resampling ($B = 300$) to preserve within-match delivery dependence, and synthesizes batters and bowlers on a shared $z$-score scale penalized by bootstrap standard error ($\text{Overall}_i = 50 + 10 \cdot z_i \cdot \sqrt{n_{\text{eff}} / (n_{\text{eff}} + \tau)}$).
+5. **Robustness, Sensitivity & Chart Generation** — Implemented in [`src/validation.py`](src/validation.py) and [`src/generate_charts.py`](src/generate_charts.py). Evaluates out-of-sample temporal correlation, Spearman rank stability ($\rho$) across alternative pressure thresholds ($P \ge 55, 65$) and shrinkage priors ($k \pm 20$), and generates publication-grade diagnostic charts.
 
 ---
 
-## Project Structure
+## Repository Structure (Public Release)
 
 ```text
-├── api/
-│   └── index.js                             # Vercel Serverless entrypoint wrapping server.js
-├── assets/
-│   ├── gandhi-kalasi.jpg                    # Developer profile photo
-│   ├── superr_crest.png                     # Custom SupeRR Selector crest badge
-│   └── superr_logo.png                      # Project logo displayed above
-├── outputs/                                 # Derived dashboard feeds only (raw/audit CSVs excluded)
-│   ├── all_player_reliability_scores.csv
-│   ├── data_quality_summary.json
-│   ├── eligible_player_universe.csv
-│   ├── top_10_allrounders.csv
-│   ├── top_10_batters.csv
-│   ├── top_10_bowlers.csv
-│   └── top_10_overall.csv
-├── public/
-│   ├── app.js                               # Client UI controller, sorting & Chart.js logic
-│   ├── favicon.svg                          # Brand favicon
-│   ├── index.html                           # Interactive Players Dashboard UI
-│   ├── logo.svg                             # Vector header wordmark
-│   └── style.css                            # Royale Obsidian & Gold responsive stylesheet
+superr-selector-ipl-2027-analytics/
+├── assets/                     # Project crest, logo, and author avatar
+├── data/
+│   └── README.md               # Expected schema for local competition CSV files
+├── docs/
+│   └── pressure_model.md       # Mathematical derivation of P_bat, P_bowl in [0, 100]
 ├── src/
 │   ├── __init__.py
-│   ├── batting_metrics.py                   # Empirical Bayes Batting Reliability Score (BRS)
-│   ├── bowling_metrics.py                   # Empirical Bayes Bowling Reliability Score (PRS)
-│   ├── generate_charts.py                   # Matplotlib figure generation
-│   ├── pressure_model.py                    # Context-aware T20 delivery pressure model
-│   ├── reliability_model.py                 # Match-cluster bootstrap & cross-role scoring
-│   └── validation.py                        # Temporal, weight & threshold validation helpers
-├── tests/
-│   └── test_public_privacy.js               # Derived dashboard & boundary checks
-├── .gitignore
-├── .vercelignore
-├── DEPLOYMENT.md                            # Runtime isolation & Vercel deployment guide
+│   ├── pressure_model.py       # Pre-delivery continuous pressure & phase tagging
+│   ├── batting_metrics.py      # Batting normal vs. high-pressure execution metrics
+│   ├── bowling_metrics.py      # Legal-ball accounting & bowling pressure metrics
+│   ├── reliability_model.py    # Empirical Bayes shrinkage, BRS/PRS & cluster CIs
+│   ├── validation.py           # Out-of-sample split & sensitivity stability tests
+│   └── generate_charts.py      # High-DPI analytical chart exporter
+├── .gitignore                  # Protects local raw CSVs, outputs/, reports/, submission/
 ├── LICENSE
-├── package.json
-├── requirements.txt
-├── server.js                                # Zero-dependency Node HTTP & Serverless handler
-└── vercel.json                              # Vercel production routing configuration
+├── README.md
+└── requirements.txt
 ```
 
 ---
 
-## Local Installation & Setup
+## Local Reproduction (With Authorized Competition Data)
 
-### Prerequisites
-- **Node.js** `22.x`
-- **Python** `3.10+` *(for running statistical modules locally)*
+In an authorized private competition workspace containing the 6 source CSV tables under `data/` and the full ingestion/ranking/test modules:
 
-### Start the Dashboard
+### 1. Environment Setup
 ```bash
-git clone https://github.com/GANDHIKALASI/superr-selector-ipl-2027-analytics.git
-cd superr-selector-ipl-2027-analytics
-npm start
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
-Open `http://localhost:3000`.
 
-### Preview Cloud Behavior & Run Verification Checks
+### 2. Data Placement
+Place the authorized competition CSV files inside `data/` as documented in [`data/README.md`](data/README.md):
+- `ball_by_ball.csv`
+- `matches.csv`
+- `competitions.csv`
+- `teams.csv`
+- `playing_eleven.csv`
+- `competition_team_player_mapping.csv`
+
+### 3. Run Pipeline & Verification Suite (Authorized Local Workspace)
 ```bash
-npm run start:public    # Simulates Vercel mode (blocks PDF/PPTX download routes)
-npm run test:privacy    # Runs derived dashboard & boundary checks
+PYTHONPATH=src python src/rankings.py
+PYTHONPATH=src python src/generate_charts.py
+pytest -rs -v
 ```
 
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for Vercel deployment instructions.
-
 ---
 
-## Privacy & Data-Handling Notice
+## Author
 
-- **Raw competition CSV datasets** (`data/*.csv` ball-by-ball, matches, lineups), **internal eligibility & identity audit tables** (`outputs/player_*_audit.csv`, `outputs/candidate_*.csv`), and **confidential competition PDF/PPTX deliverables** (`submission/`, `reports/`) are strictly excluded from GitHub and Vercel and return `HTTP 403` on cloud endpoints.
-- **No mock or synthetic player data** is used anywhere in the repository or dashboard; every displayed ranking originates directly from verified statistical pipeline outputs.
-
----
-
-## Developer Profile
-
-<img src="assets/gandhi-kalasi.jpg" alt="Gandhi Kalasi" width="96" />
-
-**Developed by Gandhi Kalasi**
-
-- **GitHub:** https://github.com/GANDHIKALASI
-- **LinkedIn:** https://www.linkedin.com/in/gandhi-kalasi/
-- **Instagram:** https://instagram.com/bug_gandhi
+**Gandhi Kalasi**  
+Quantitative Cricket Analytics & Sports Data Engineering  
+Repository: `GANDHIKALASI/superr-selector-ipl-2027-analytics`  
+License: [MIT](LICENSE)

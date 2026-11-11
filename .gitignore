@@ -12,7 +12,8 @@ env/
 node_modules/
 .vercel
 
-# Jupyter Notebook checkpoints
+# Notebooks
+*.ipynb
 .ipynb_checkpoints
 
 # Secrets / Logs / OS generated files
@@ -30,14 +31,16 @@ Thumbs.db
 htmlcov/
 
 # ======================================================================
-# PROPRIETARY RAW DATA, PRIVATE REPORTS & INTERNAL AUDITS
-# Allow ONLY the 7 derived dashboard feed files inside outputs/.
+# PROPRIETARY RAW DATA, DERIVED OUTPUTS & PRIVATE COMPETITION REPORTS
+# Keep proprietary competition data, player-level rankings/outputs,
+# full research reports, submission packages, and player-ID audits local.
 # ======================================================================
-data/
+data/*
+!data/README.md
+outputs/
 submission/
 reports/
-docs/
-notebooks/
+v0_deliverables/
 assets/screenshot_*.png
 assets/dashboard*.png
 src/data_audit.py
@@ -49,12 +52,3 @@ tests/test_rankings.py
 *.zip
 *.pdf
 *.pptx
-
-outputs/*
-!outputs/top_10_batters.csv
-!outputs/top_10_bowlers.csv
-!outputs/top_10_overall.csv
-!outputs/top_10_allrounders.csv
-!outputs/eligible_player_universe.csv
-!outputs/all_player_reliability_scores.csv
-!outputs/data_quality_summary.json
