@@ -1,0 +1,60 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+node_modules/
+.vercel
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Secrets / Logs / OS generated files
+.env
+.env.*
+.streamlit/secrets.toml
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+
+# Tests & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ======================================================================
+# PROPRIETARY RAW DATA, PRIVATE REPORTS & INTERNAL AUDITS
+# Allow ONLY the 7 derived dashboard feed files inside outputs/.
+# ======================================================================
+data/
+submission/
+reports/
+docs/
+notebooks/
+assets/screenshot_*.png
+assets/dashboard*.png
+src/data_audit.py
+src/preprocessing.py
+src/rankings.py
+tests/test_pipeline.py
+tests/test_pressure_model.py
+tests/test_rankings.py
+*.zip
+*.pdf
+*.pptx
+
+outputs/*
+!outputs/top_10_batters.csv
+!outputs/top_10_bowlers.csv
+!outputs/top_10_overall.csv
+!outputs/top_10_allrounders.csv
+!outputs/eligible_player_universe.csv
+!outputs/all_player_reliability_scores.csv
+!outputs/data_quality_summary.json
